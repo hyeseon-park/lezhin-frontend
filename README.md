@@ -1,45 +1,54 @@
-# Getting Started with Create React App
+# 로컬 환경에서 시작하기
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+npm run start
 
-## Available Scripts
+# 경로
 
-In the project directory, you can run:
+/ : 메인 페이지
+/ranking : 랭킹 페이지(과제)
 
-### `npm start`
+메인 페이지 가운데 이미지 클릭하면 랭킹 페이지로 이동합니다.
+주소 입력해서 이동하셔도 됩니다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# 구조
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+/apis : API 호출 파일 모음
+/components : 컴포넌트 모음
+/context : Context API 파일 모음
+/images : 이미지 모음
+/interfaces : 인터페이스 모음
+/mocks : mock 데이터와 msw 사용을 위한 파일 모음
+/pages : 페이지 모음
+/shared : 전역적으로 사용되는 스타일 관련 파일 모음
+-/common : 폰트 색깔, 사이즈
+-/global : 전역 스타일
+-/guide : UI 가이드
+-/style : 스타일 파일
+/utils : 공통적으로 사용되는 유틸 함수 모음
+App.tsx : 전역스타일, Context API, 라우팅, URL 쿼리 파라미터 디폴트 값 적용
+index.tsx : 엔트리 포인트
 
-### `npm test`
+# 사용한 라이브러리
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+react :
+react-router-dom : 라우팅을 위해 사용
+styled-components : 컴포넌트 단위로 스타일을 관리하기 위해 사용
+styled-reset : 스타일을 초기화하여 브라우저 간의 스타일 차이를 없애기 위해 사용
+react-infinite-scroller : 무한 스크롤을 간편하게 구현하기 위해 사용
+msw : mock 데이터를 API 요청을 통해서 가져오기 위해 사용
 
-### `npm run build`
+# 필터 관련...
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+처음 진입 시에는 연재중 작품과 완결 작품 모두 포함해서 노출되게 했습니다.
+최초로 '연재중' 또는 '완결'을 클릭해서 on 할 때부터 배타적으로 노출됩니다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+필터 클릭 시 리스트에 적용되는 조건은 다음과 같습니다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+'연재중' 클릭 -> 연재중인 작품만 노출
+'완결' 클릭 - 완결 작품만 노출
+'무료회차 3회 이상' 클릭 -> 무료회차 3회 이상 작품만 노출
+'단행본 작품' 클릭 -> 단행본 작품만 노출
 
-### `npm run eject`
+# Context API를 사용한 이유...
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-    scheduled: false, // true: 연재중 작품만 노출
-    completed: false, // true: 완결 작품만 노출
-    freed: false, // true: 무료회차 3개 이상만 노출
-    print: false, // true: 단행본 작품만 노출
+페이지를 이동했을 때도 리스트와 필터링 값이 그대로 유지되게 하기 위해 사용했습니다.
