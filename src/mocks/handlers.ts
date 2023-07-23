@@ -25,7 +25,7 @@ export const handlers = [
       case "5":
         return res(ctx.status(200), ctx.json(romancePage5));
       default:
-        break;
+        return res(ctx.status(404));
     }
   }),
   rest.get("/api/comics/drama", async (req, res, ctx) => {
@@ -42,7 +42,7 @@ export const handlers = [
       case "5":
         return res(ctx.status(200), ctx.json(dramaPage5));
       default:
-        break;
+        return res(ctx.status(404));
     }
   }),
 ];
