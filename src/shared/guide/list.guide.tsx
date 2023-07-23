@@ -3,24 +3,66 @@ import * as S from "../styles/list.style";
 
 const ListGuide = () => {
   return (
-    <S.Item>
-      {/* <S.ItemTop2> */}
-      <S.ItemLeft>
-        <S.Thumb>
-          <S.Img src={""} alt="썸네일" />
-        </S.Thumb>
-      </S.ItemLeft>
-      <S.ItemCount>
-        <S.ItemRank>{}</S.ItemRank>
-        <S.ItemTitle>{}</S.ItemTitle>
-      </S.ItemCount>
-      <S.ItemInfo>
-        <S.ItemTitle>{}</S.ItemTitle>
-        <S.ItemArtist>{}</S.ItemArtist>
-        <S.ItemFreed>{}화 무료</S.ItemFreed>
-      </S.ItemInfo>
-      {/* </S.ItemTop2> */}
-    </S.Item>
+    <S.ListWrap>
+      <S.Item>
+        <S.ItemLeft>
+          <S.Thumb>
+            <S.Img src="" alt="썸네일" />
+          </S.Thumb>
+        </S.ItemLeft>
+        <S.ItemCount>
+          <S.ItemRank>1</S.ItemRank>
+          <S.ItemStatus status={"same"}>-</S.ItemStatus>
+        </S.ItemCount>
+        <S.ItemInfo>
+          <S.ItemTitle>웹툰 제목</S.ItemTitle>
+          <S.ItemArtists>
+            <S.ItemArtist>작가명</S.ItemArtist>
+          </S.ItemArtists>
+          <S.ItemFreed>3화 무료</S.ItemFreed>
+          <S.ItemState>완결</S.ItemState>
+        </S.ItemInfo>
+      </S.Item>
+      <S.Item>
+        <S.ItemLeft>
+          <S.Thumb>
+            <S.Img alt="썸네일" />
+          </S.Thumb>
+        </S.ItemLeft>
+        <S.ItemCount>
+          <S.ItemRank>1</S.ItemRank>
+          <S.ItemStatus status={"up"}>1</S.ItemStatus>
+        </S.ItemCount>
+        <S.ItemInfo>
+          <S.ItemTitle>웹툰 제목</S.ItemTitle>
+          <S.ItemArtists>
+            <S.ItemArtist>작가명</S.ItemArtist>
+          </S.ItemArtists>
+          <S.ItemFreed>3화 무료</S.ItemFreed>
+          <S.ItemState>완결</S.ItemState>
+        </S.ItemInfo>
+      </S.Item>
+      <S.Item>
+        <S.ItemLeft>
+          <S.Thumb>
+            <S.Img alt="썸네일" />
+          </S.Thumb>
+        </S.ItemLeft>
+        <S.ItemCount>
+          <S.ItemRank>1</S.ItemRank>
+          <S.ItemStatus status={"down"}>2</S.ItemStatus>
+        </S.ItemCount>
+        <S.ItemInfo>
+          <S.ItemTitle>웹툰 제목</S.ItemTitle>
+          <S.ItemArtists>
+            <S.ItemArtist>그림작가</S.ItemArtist>
+            <S.ItemArtist>글작가</S.ItemArtist>
+          </S.ItemArtists>
+          <S.ItemFreed>3화 무료</S.ItemFreed>
+          <S.ItemState>완결</S.ItemState>
+        </S.ItemInfo>
+      </S.Item>
+    </S.ListWrap>
   );
 };
 
