@@ -1,10 +1,11 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import * as C from "../common/color";
 import * as F from "../common/fontSize";
 
 export const ListWrap = styled.div`
   margin-top: 113px;
   padding: 0 16px;
+  overflow: auto;
 `;
 
 export const Item = styled.li`
@@ -105,3 +106,19 @@ export const ItemArtist = styled.span`
 export const ItemFreed = styled(ItemP)``;
 
 export const ItemState = styled(ItemP)``;
+
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(359deg); }
+`;
+
+export const Loading = styled.div`
+  margin: 5% auto;
+  height: 30px;
+  width: 30px;
+  border: 2px solid ${C.LEZHINRED};
+  border-radius: 100%;
+  border-right-color: ${C.LEZHINLIGHTGREY};
+  border-top-color: ${C.LEZHINLIGHTGREY};
+  animation: ${spin} 800ms infinite linear;
+`;

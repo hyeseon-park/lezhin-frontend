@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Filter from "../../components/Filter";
 import List from "../../components/List";
 import { useSearchParams } from "react-router-dom";
-import { ComicRankItem, Filtering } from "../../interfaces/all";
+import { ComicRankItem, Filterings } from "../../interfaces/all";
 
 const RankingPage = () => {
-  const [page, setPage] = useState(1);
+  const isMounted = useRef(false);
   const [comicsList, setComicsList] = useState<ComicRankItem[]>([]);
   const [filteredComicsList, setFilteredComicsList] = useState<ComicRankItem[]>(
     []
   );
   const [searchParams, setSearchParams] = useSearchParams();
   const [headerTitle, setHeaderTitle] = useState("");
-  const [filtering, setFiltering] = useState<Filtering>({
+  const [hasMore, setHasMore] = useState(true);
+  const [filterings, setFilterings] = useState<Filterings>({
     scheduled: false,
     completed: false,
     freed: false,
@@ -31,83 +32,88 @@ const RankingPage = () => {
     }
   }, []);
 
+  // 헤더 타이틀 설정
   useEffect(() => {
     setHeaderTitle(searchParams.get("genre") === "drama" ? "드라마" : "로맨스");
   }, [searchParams]);
 
-  // 처음 페이지 진입 시, 페이지가 바뀔 때 데이터 불러오기
-  useEffect(() => {
-    getComics();
-  }, [searchParams, page]);
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let { name, checked } = e.target;
-    if (name === "scheduled") {
-      setFiltering({ ...filtering, scheduled: checked, completed: !checked });
-    } else if (name === "completed") {
-      setFiltering({ ...filtering, scheduled: !checked, completed: checked });
-    } else {
-      setFiltering({ ...filtering, [name]: checked });
-    }
-  };
+  // 체크박스 클릭으로 필터링을 바꿨을 때
+  const handleFilterChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      let { name, checked } = e.target;
+      if (name === "scheduled") {
+        setFilterings({
+          ...filterings,
+          scheduled: checked,
+          completed: !checked,
+        });
+      } else if (name === "completed") {
+        setFilterings({
+          ...filterings,
+          scheduled: !checked,
+          completed: checked,
+        });
+      } else {
+        setFilterings({ ...filterings, [name]: checked });
+      }
+    },
+    [filterings]
+  );
 
   // 필터링 변경 시 필터링에 따라 리스트 변경
   useEffect(() => {
-    setFilteredComicsList(handleFiltering(comicsList));
-  }, [filtering]);
+    if (isMounted.current) {
+      setFilteredComicsList(handleFilterList(comicsList));
+    } else {
+      isMounted.current = true;
+    }
+  }, [filterings]);
 
-  // 필터링 옵션에 맞게 리스트 필터
-  const handleFiltering = (list: ComicRankItem[]) => {
+  // 필터링 옵션에 따라 리스트를 필터링
+  const handleFilterList = (list: ComicRankItem[]) => {
     return list.filter((c) => {
       return (
-        (filtering.scheduled ? c.contentsState === "scheduled" : true) &&
-        (filtering.completed ? c.contentsState === "completed" : true) &&
-        (filtering.freed ? c.freedEpisodeSize > 3 : true) &&
-        (filtering.print ? c.isPrint === true : true)
+        (filterings.scheduled ? c.contentsState === "scheduled" : true) &&
+        (filterings.completed ? c.contentsState === "completed" : true) &&
+        (filterings.freed ? c.freedEpisodeSize >= 3 : true) &&
+        (filterings.print ? c.isPrint === true : true)
       );
     });
   };
 
   // API 호출
-  const getComics = async () => {
+  const getComics = useCallback(async () => {
     let genre = searchParams.get("genre");
+    let page = comicsList.length / 20 + 1;
     let params = { page: String(page) };
+    console.log(genre, page);
 
-    const res = await fetch(
+    const response = await fetch(
       `api/comics/${genre}?` + new URLSearchParams(params)
     ).then((res) => res.json());
-    let resData = res.data;
+    let resData = response.data;
 
     setComicsList((prevData) => [...prevData, ...resData]);
     setFilteredComicsList((prevData) => [
       ...prevData,
-      ...handleFiltering(resData),
+      ...handleFilterList(resData),
     ]);
-    // setFilteredComicsList(filteredComicsList.concat(handleFiltering(resData)));
-  };
 
-  // 무한 스크롤
-  const handleScroll = (event: any) => {
-    const { scrollHeight, scrollTop, clientHeight } =
-      event.target.documentElement;
-    if (scrollHeight - Math.round(scrollTop) <= clientHeight) {
-      if (page < 5) setPage((prevState) => prevState + 1);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  });
+    if (page >= 5) setHasMore(false);
+  }, [searchParams, comicsList.length, filterings]);
 
   return (
     <>
       <Filter
         headerTitle={headerTitle}
-        filtering={filtering}
+        filterings={filterings}
         onFilterChange={handleFilterChange}
       />
-      <List filteredComicsList={filteredComicsList} />
+      <List
+        filteredComicsList={filteredComicsList}
+        hasMore={hasMore}
+        getComics={getComics}
+      />
     </>
   );
 };

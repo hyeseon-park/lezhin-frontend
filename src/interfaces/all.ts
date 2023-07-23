@@ -32,7 +32,7 @@ export interface ComicRankItem {
   thumbnailSrc: string;
 }
 
-export interface Filtering {
+export interface Filterings {
   scheduled: boolean;
   completed: boolean;
   freed: boolean;
@@ -41,10 +41,12 @@ export interface Filtering {
 
 export interface FilterProps {
   headerTitle: string;
-  filtering: Filtering;
+  filterings: Filterings;
   onFilterChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface ListProps {
   filteredComicsList: ComicRankItem[];
+  hasMore: boolean;
+  getComics: any;
 }
