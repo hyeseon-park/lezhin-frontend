@@ -3,15 +3,16 @@ import Filter from "../../components/Filter";
 import List from "../../components/List";
 import { useSearchParams } from "react-router-dom";
 import { ComicRankItem, Filterings } from "../../interfaces/all";
+import { getComicsList } from "../../apis/comicsApi";
 
 const RankingPage = () => {
   const isMounted = useRef(false);
+  const [searchParams] = useSearchParams();
+  const [headerTitle, setHeaderTitle] = useState("");
   const [comicsList, setComicsList] = useState<ComicRankItem[]>([]);
   const [filteredComicsList, setFilteredComicsList] = useState<ComicRankItem[]>(
     []
   );
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [headerTitle, setHeaderTitle] = useState("");
   const [hasMore, setHasMore] = useState(true);
   const [filterings, setFilterings] = useState<Filterings>({
     scheduled: false,
@@ -19,18 +20,6 @@ const RankingPage = () => {
     freed: false,
     print: false,
   });
-
-  // URL query parameter default 세팅
-  useEffect(() => {
-    const updatedSearchParams = new URLSearchParams(searchParams);
-    if (
-      updatedSearchParams.get("genre") !== "drama" &&
-      updatedSearchParams.get("genre") !== "romance"
-    ) {
-      updatedSearchParams.set("genre", "romance");
-      setSearchParams(updatedSearchParams);
-    }
-  }, []);
 
   // 헤더 타이틀 설정
   useEffect(() => {
@@ -41,20 +30,21 @@ const RankingPage = () => {
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       let { name, checked } = e.target;
+
       if (name === "scheduled") {
-        setFilterings({
-          ...filterings,
+        setFilterings((prev) => ({
+          ...prev,
           scheduled: checked,
           completed: !checked,
-        });
+        }));
       } else if (name === "completed") {
-        setFilterings({
-          ...filterings,
+        setFilterings((prev) => ({
+          ...prev,
           scheduled: !checked,
           completed: checked,
-        });
+        }));
       } else {
-        setFilterings({ ...filterings, [name]: checked });
+        setFilterings((prev) => ({ ...prev, [name]: checked }));
       }
     },
     [filterings]
@@ -85,21 +75,28 @@ const RankingPage = () => {
   const getComics = useCallback(async () => {
     let genre = searchParams.get("genre");
     let page = comicsList.length / 20 + 1;
-    let params = { page: String(page) };
-    console.log(genre, page);
 
-    const response = await fetch(
-      `api/comics/${genre}?` + new URLSearchParams(params)
-    ).then((res) => res.json());
-    let resData = response.data;
+    try {
+      if (genre === null) return;
+      const response = await getComicsList(genre, page);
 
-    setComicsList((prevData) => [...prevData, ...resData]);
-    setFilteredComicsList((prevData) => [
-      ...prevData,
-      ...handleFilterList(resData),
-    ]);
+      if (!response.ok) {
+        throw new Error(`${response.status} 에러가 발생했습니다!`);
+      }
 
-    if (page >= 5) setHasMore(false);
+      const result = await response.json();
+      const resultData = result.data;
+
+      setHasMore(result.hasNext);
+      setComicsList((prevData) => [...prevData, ...resultData]);
+      setFilteredComicsList((prevData) => [
+        ...prevData,
+        ...handleFilterList(resultData),
+      ]);
+    } catch (err) {
+      console.log(err);
+      setHasMore(false);
+    }
   }, [searchParams, comicsList.length, filterings]);
 
   return (
