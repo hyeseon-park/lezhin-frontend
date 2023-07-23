@@ -40,13 +40,24 @@ export interface Filterings {
 }
 
 export interface FilterProps {
-  headerTitle: string;
-  filterings: Filterings;
   onFilterChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface ListProps {
-  filteredComicsList: ComicRankItem[];
-  hasMore: boolean;
   getComics: any;
+}
+
+export interface IRankingContext {
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  hasMore: boolean;
+  setHasMore: React.Dispatch<React.SetStateAction<boolean>>;
+  headerTitle: string;
+  setHeaderTitle: React.Dispatch<React.SetStateAction<string>>;
+  filterings: Filterings;
+  setFilterings: React.Dispatch<React.SetStateAction<Filterings>>;
+  comicsList: ComicRankItem[];
+  setComicsList: React.Dispatch<React.SetStateAction<ComicRankItem[]>>;
+  filteredComicsList: ComicRankItem[];
+  setFilteredComicsList: React.Dispatch<React.SetStateAction<ComicRankItem[]>>;
 }
