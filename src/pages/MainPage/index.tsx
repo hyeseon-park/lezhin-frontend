@@ -7,8 +7,8 @@ const MainPage = () => {
   return (
     <S.Wrap>
       <Link to="/ranking?genre=romance">
-        <S.Box>
-          <img src={jaymee} alt="jaymee" />
+        <S.Box size={100}>
+          <S.Img src={jaymee} alt="jaymee" size={50} />
         </S.Box>
       </Link>
     </S.Wrap>
