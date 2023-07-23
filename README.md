@@ -39,8 +39,7 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+    scheduled: false, // true: 연재중 작품만 노출
+    completed: false, // true: 완결 작품만 노출
+    freed: false, // true: 무료회차 3개 이상만 노출
+    print: false, // true: 단행본 작품만 노출
