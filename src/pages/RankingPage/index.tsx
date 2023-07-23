@@ -10,14 +10,15 @@ const RankingPage = () => {
   const isMounted = useRef(false);
   const [searchParams] = useSearchParams();
   const {
+    hasMore,
     setHasMore,
     setHeaderTitle,
     filterings,
     setFilterings,
     comicsList,
     setComicsList,
+    filteredComicsList,
     setFilteredComicsList,
-    setLoading,
   } = useContext(RankingContext)!;
 
   // 헤더 타이틀 설정
@@ -75,7 +76,6 @@ const RankingPage = () => {
 
   // 리스트를 불러오는 API 호출
   const getComics = useCallback(async () => {
-    setLoading(true);
     let genre = searchParams.get("genre");
     let page = comicsList.length / 20 + 1;
 
@@ -99,7 +99,6 @@ const RankingPage = () => {
         ...prevData,
         ...handleFilterList(resultData),
       ]);
-      setLoading(false);
     } catch (err) {
       console.log(err);
       setHasMore(false);
@@ -110,7 +109,11 @@ const RankingPage = () => {
   return (
     <>
       <Filter onFilterChange={handleFilterChange} />
-      <List getComics={getComics} />
+      <List
+        hasMore={hasMore}
+        filteredComicsList={filteredComicsList}
+        getComics={getComics}
+      />
     </>
   );
 };

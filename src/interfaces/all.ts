@@ -44,12 +44,12 @@ export interface FilterProps {
 }
 
 export interface ListProps {
+  hasMore: boolean;
+  filteredComicsList: ComicRankItem[];
   getComics: any;
 }
 
 export interface IRankingContext {
-  loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   hasMore: boolean;
   setHasMore: React.Dispatch<React.SetStateAction<boolean>>;
   headerTitle: string;

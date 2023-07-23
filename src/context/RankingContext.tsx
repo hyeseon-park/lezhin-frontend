@@ -20,7 +20,6 @@ export const RankingContextProvider = ({
   const [filteredComicsList, setFilteredComicsList] = useState<ComicRankItem[]>(
     []
   );
-  const [loading, setLoading] = useState(false);
 
   return (
     <RankingContext.Provider
@@ -35,8 +34,6 @@ export const RankingContextProvider = ({
         setComicsList,
         filteredComicsList,
         setFilteredComicsList,
-        loading,
-        setLoading,
       }}
     >
       {children}
