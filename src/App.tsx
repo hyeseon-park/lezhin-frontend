@@ -4,6 +4,8 @@ import "./App.css";
 import GlobalStyles from "./shared/global/globalStyles";
 import RankingPage from "./pages/RankingPage";
 import MainPage from "./pages/MainPage";
+import FilterGuide from "./shared/guide/filter.guide";
+import ListGuide from "./shared/guide/list.guide";
 
 function App() {
   return (
@@ -14,6 +16,10 @@ function App() {
           <Route path="/">
             <Route index element={<MainPage />} />
             <Route path="ranking" element={<RankingPage />} />
+            <Route path="guide">
+              <Route path="filter" element={<FilterGuide />} />
+              <Route path="list" element={<ListGuide />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
