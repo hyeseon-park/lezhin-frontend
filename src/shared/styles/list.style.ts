@@ -1,16 +1,24 @@
 import styled, { keyframes } from "styled-components";
 import * as C from "../common/color";
 import * as F from "../common/fontSize";
+import InfiniteScroll from "react-infinite-scroller";
 
-export const ListWrap = styled.div`
+export const ListWrap = styled.ul`
   margin-top: 113px;
   padding: 0 16px;
   overflow: auto;
 `;
 
+export const InfiniteScrollWrap = styled(InfiniteScroll)`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`;
+
 export const Item = styled.li`
   display: flex;
   justify-content: flex-start;
+  min-width: 500px;
   margin-bottom: 16px;
 `;
 

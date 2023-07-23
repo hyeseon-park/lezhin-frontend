@@ -12,6 +12,10 @@ export const FilterHeader = styled.header`
   z-index: 1000;
 `;
 
+export const FilterTitle = styled.div`
+  display: flex;
+`;
+
 export const FilterHeaderTitle = styled.p`
   margin-top: 10px;
   font-size: ${F.LARGE};
