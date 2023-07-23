@@ -1,65 +1,67 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef } from "react";
 import Filter from "../../components/Filter";
 import List from "../../components/List";
 import { useSearchParams } from "react-router-dom";
 import { ComicRankItem, Filterings } from "../../interfaces/all";
 import { getComicsList } from "../../apis/comicsApi";
+import { RankingContext } from "../../context/RankingContext";
 
 const RankingPage = () => {
   const isMounted = useRef(false);
   const [searchParams] = useSearchParams();
-  const [headerTitle, setHeaderTitle] = useState("");
-  const [comicsList, setComicsList] = useState<ComicRankItem[]>([]);
-  const [filteredComicsList, setFilteredComicsList] = useState<ComicRankItem[]>(
-    []
-  );
-  const [hasMore, setHasMore] = useState(true);
-  const [filterings, setFilterings] = useState<Filterings>({
-    scheduled: false,
-    completed: false,
-    freed: false,
-    print: false,
-  });
+  const {
+    setHasMore,
+    setHeaderTitle,
+    filterings,
+    setFilterings,
+    comicsList,
+    setComicsList,
+    setFilteredComicsList,
+    setLoading,
+  } = useContext(RankingContext)!;
 
   // 헤더 타이틀 설정
   useEffect(() => {
     setHeaderTitle(searchParams.get("genre") === "drama" ? "드라마" : "로맨스");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  // 체크박스 클릭으로 필터링을 바꿨을 때
+  // 필터 버튼을 클릭했을 때 Filterings 값을 변경
   const handleFilterChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       let { name, checked } = e.target;
 
       if (name === "scheduled") {
-        setFilterings((prev) => ({
+        setFilterings((prev: Filterings) => ({
           ...prev,
           scheduled: checked,
           completed: !checked,
         }));
       } else if (name === "completed") {
-        setFilterings((prev) => ({
+        setFilterings((prev: Filterings) => ({
           ...prev,
           scheduled: !checked,
           completed: checked,
         }));
       } else {
-        setFilterings((prev) => ({ ...prev, [name]: checked }));
+        setFilterings((prev: Filterings) => ({ ...prev, [name]: checked }));
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [filterings]
   );
 
-  // 필터링 변경 시 필터링에 따라 리스트 변경
+  // Filterings 값이 변경될 때마다 필터 옵션에 따라 리스트 변경
   useEffect(() => {
     if (isMounted.current) {
       setFilteredComicsList(handleFilterList(comicsList));
     } else {
       isMounted.current = true;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterings]);
 
-  // 필터링 옵션에 따라 리스트를 필터링
+  // 필터 옵션에 따라 필터링한 리스트를 반환
   const handleFilterList = (list: ComicRankItem[]) => {
     return list.filter((c) => {
       return (
@@ -71,8 +73,9 @@ const RankingPage = () => {
     });
   };
 
-  // API 호출
+  // 리스트를 불러오는 API 호출
   const getComics = useCallback(async () => {
+    setLoading(true);
     let genre = searchParams.get("genre");
     let page = comicsList.length / 20 + 1;
 
@@ -88,29 +91,26 @@ const RankingPage = () => {
       const resultData = result.data;
 
       setHasMore(result.hasNext);
-      setComicsList((prevData) => [...prevData, ...resultData]);
-      setFilteredComicsList((prevData) => [
+      setComicsList((prevData: ComicRankItem[]) => [
+        ...prevData,
+        ...resultData,
+      ]);
+      setFilteredComicsList((prevData: ComicRankItem[]) => [
         ...prevData,
         ...handleFilterList(resultData),
       ]);
+      setLoading(false);
     } catch (err) {
       console.log(err);
       setHasMore(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, comicsList.length, filterings]);
 
   return (
     <>
-      <Filter
-        headerTitle={headerTitle}
-        filterings={filterings}
-        onFilterChange={handleFilterChange}
-      />
-      <List
-        filteredComicsList={filteredComicsList}
-        hasMore={hasMore}
-        getComics={getComics}
-      />
+      <Filter onFilterChange={handleFilterChange} />
+      <List getComics={getComics} />
     </>
   );
 };
