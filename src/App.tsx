@@ -9,8 +9,6 @@ import {
 import GlobalStyles from "./shared/global/globalStyles";
 import RankingPage from "./pages/RankingPage";
 import MainPage from "./pages/MainPage";
-import FilterGuide from "./shared/guide/filter.guide";
-import ListGuide from "./shared/guide/list.guide";
 import { RankingContextProvider } from "./context/RankingContext";
 
 // URL query parameter default 세팅
@@ -18,13 +16,12 @@ const GenreParamRoutes = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    const updatedSearchParams = new URLSearchParams(searchParams);
     if (
-      updatedSearchParams.get("genre") !== "drama" &&
-      updatedSearchParams.get("genre") !== "romance"
+      searchParams.get("genre") !== "drama" &&
+      searchParams.get("genre") !== "romance"
     ) {
-      updatedSearchParams.set("genre", "romance");
-      setSearchParams(updatedSearchParams);
+      const newSearchParams = new URLSearchParams({ genre: "romance" });
+      setSearchParams(newSearchParams);
     }
   }, [searchParams, setSearchParams]);
 
@@ -42,10 +39,6 @@ function App() {
               <Route index element={<MainPage />} />
               <Route element={<GenreParamRoutes />}>
                 <Route path="ranking" element={<RankingPage />} />
-              </Route>
-              <Route path="guide">
-                <Route path="filter" element={<FilterGuide />} />
-                <Route path="list" element={<ListGuide />} />
               </Route>
             </Route>
           </Routes>
