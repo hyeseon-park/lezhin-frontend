@@ -20,6 +20,7 @@ export const FilterHeaderTitle = styled.p`
   margin-top: 10px;
   font-size: ${F.LARGE};
   font-weight: 700;
+  white-space: nowrap;
 `;
 
 export const FilterRow = styled.div`
