@@ -50,4 +50,5 @@ export const FilterBox = styled.div<{ checked: boolean }>`
 export const FilterSpan = styled.span`
   margin: 5px;
   font-size: ${F.SMALL};
+  white-space: nowrap;
 `;

@@ -82,7 +82,7 @@ export const ItemTitle = styled.p`
   line-height: 24px;
   font-size: ${F.MEDIUM};
   font-weight: 400;
-  white-space: normal;
+  white-space: nowrap;
   margin-bottom: 8px;
   overflow: hidden;
   text-overflow: ellipsis;
