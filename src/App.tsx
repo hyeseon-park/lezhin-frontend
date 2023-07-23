@@ -6,12 +6,12 @@ import {
   useSearchParams,
   Outlet,
 } from "react-router-dom";
-import "./App.css";
 import GlobalStyles from "./shared/global/globalStyles";
 import RankingPage from "./pages/RankingPage";
 import MainPage from "./pages/MainPage";
 import FilterGuide from "./shared/guide/filter.guide";
 import ListGuide from "./shared/guide/list.guide";
+import { RankingContextProvider } from "./context/RankingContext";
 
 // URL query parameter default 세팅
 const GenreParamRoutes = () => {
@@ -35,20 +35,22 @@ function App() {
   return (
     <>
       <GlobalStyles />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/">
-            <Route index element={<MainPage />} />
-            <Route element={<GenreParamRoutes />}>
-              <Route path="ranking" element={<RankingPage />} />
+      <RankingContextProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/">
+              <Route index element={<MainPage />} />
+              <Route element={<GenreParamRoutes />}>
+                <Route path="ranking" element={<RankingPage />} />
+              </Route>
+              <Route path="guide">
+                <Route path="filter" element={<FilterGuide />} />
+                <Route path="list" element={<ListGuide />} />
+              </Route>
             </Route>
-            <Route path="guide">
-              <Route path="filter" element={<FilterGuide />} />
-              <Route path="list" element={<ListGuide />} />
-            </Route>
-          </Route>
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
+      </RankingContextProvider>
     </>
   );
 }
