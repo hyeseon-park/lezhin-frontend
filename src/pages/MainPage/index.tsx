@@ -1,11 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import * as S from "../../shared/styles/main.style";
+import jaymee from "../../images/jaymee.svg";
 
 const MainPage = () => {
   return (
-    <div>
-      <Link to="/ranking?genre=romance">Ranking 페이지로 이동</Link>
-    </div>
+    <S.Wrap>
+      <Link to="/ranking?genre=romance">
+        <S.Box>
+          <img src={jaymee} alt="jaymee" />
+        </S.Box>
+      </Link>
+    </S.Wrap>
   );
 };
 
